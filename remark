@@ -1,0 +1,32 @@
+1、创建项目：scrapy startproject tutorial
+	scrapy.cfg:项目配置文件
+	tutorial:项目python模块
+	tutorial/item.py:项目的item文件
+	tutorial/pipelines.py:项目的pipelines文件
+	tutorial/settings.py:项目的设置文件
+	tutorial/spiders:防止spider代码的模块
+
+2、item定义：保存爬取到的数据的容器
+	 模式:field = scrapy.Field()
+
+3、spiders:
+	定义一个类集成scrapy.Spider
+		name ：必须定义，且唯一
+		start_urls:(list类型) 初始要爬取的url列表
+		parse():参数为url的响应结果对象response，返回生成的item和进一步处理的url的request对象
+
+4、爬取
+进入项目根目录，运行 scrapy crawl name  # 其中name为要爬取的spider的唯一名字
+
+
+5、获取数据
+
+
+others:
+1、运行scrapy crawl name 报错 
+提示 ImportError: No module named 'win32api'
+需要安装 pip install pypiwin32
+
+2、xpath
+/html/body/div/div[2]/div[1]/div[1]
+body > div > div:nth-child(2) > div.col-md-8 > div:nth-child(1)
