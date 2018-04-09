@@ -8,6 +8,17 @@ git操作：
 4、git push -u origin master
 
 =====================================================
+scrapy 安装
+使用pip安装scrapy不成功,则:（安装whl之前先安装wheel）
+下载scrapy whl文件
+下载scrapy依赖库twiste whl文件
+
+1、安装pip install twiste.whl
+2、安装scrapy相关依赖包,直接使用pip安装即可
+3、安装scrapy
+4、测试安装成功：scrapy -h
+
+=====================================================
 
 1、创建项目：scrapy startproject tutorial
 	scrapy.cfg:项目配置文件
