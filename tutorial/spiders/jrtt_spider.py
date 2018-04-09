@@ -8,11 +8,11 @@ class JrttSpider(scrapy.Spider):
 	name = 'jrtt'
 
 	start_urls = [
-		'',
-		'',
+		'https://www.toutiao.com/ch/news_game/',
+		'https://www.toutiao.com/ch/news_sports/',
 	]
 
 	def parse(self,response):
-		filename = response.url.split("&")[-1]
-        with open(filename, 'wb') as f:
-            f.write(response.body)
+		filename = response.url.split("/")[-2]
+		with open(filename, 'wb') as f:
+			f.write(response.body)
