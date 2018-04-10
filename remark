@@ -27,6 +27,7 @@ git config --list
 git init , 在需要把制定项目交由git管理使用，项目根目录使用
 git add xxx/all ,将修改的文件或者很多文件添加到缓存区时使用
 git commit ,提交修改到本地git仓库
+git commit -a,暂存加提交，简化操作
 
 git clone [url] [local_prj_name],
 url 协议: git://  http(s)://  user@server://path.git
@@ -42,8 +43,8 @@ git状态:(查看，git status)
 提交到本地:执行了git commit命令后，在暂存区中的文件被提交本地库，并新开了一个历史版本
 
 查看详细修改:
-git diff : 当前工作区和暂存区的文件比较
-git diff --cached :暂存区和最新版本的比较
+git diff : 当前工作区和暂存区的文件比较，如果暂存区没有，则和最新版本比较
+git diff --cached/--staged :暂存区和最新版本的比较
 
 忽略某些文件的提交
 文件 .gitignore 的格式规范如下：
@@ -52,6 +53,30 @@ git diff --cached :暂存区和最新版本的比较
 匹配模式最后跟反斜杠（/）说明要忽略的是目录。
 要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（!）取反。
 
+删除文件:
+git rm ,
+git rm --cached,
+
+移动或修改文件
+git mv [from_file] [to_file/to_dir]
+
+查看历史记录:
+git log,最新的版本再最上面
+git log -p -2,每次提交的内容差异，-2表示最近2次更新
+git log --stat ,增改行统计
+
+撤销操作:
+取消已经暂存的文件,git reset HEAD xxx
+
+远程仓库的使用:
+查看远程仓库, git remote -v(详情)
+添加远程仓库, git remote add [shortname] [url]
+从远程仓库抓取数据到本地git库, git fetch shortname,创建了一个新的分支
+推送数据到远程仓库, git push remote master,只有在所克隆的服务器上有写权限，或者其他人没有提交数据
+查看远程仓库的信息, git remote show [remote-name]
+远程仓库的重命名和删除, git remote rename/rm
+
+打标签
 
 =====================================================
 scrapy 安装
