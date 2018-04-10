@@ -64,6 +64,7 @@ git mv [from_file] [to_file/to_dir]
 git log,最新的版本再最上面
 git log -p -2,每次提交的内容差异，-2表示最近2次更新
 git log --stat ,增改行统计
+git log --pretty=oneline
 
 撤销操作:
 取消已经暂存的文件,git reset HEAD xxx
@@ -76,8 +77,8 @@ git log --stat ,增改行统计
 查看远程仓库的信息, git remote show [remote-name]
 远程仓库的重命名和删除, git remote rename/rm
 
-打标签
-
+打标签:
+轻量级和含附注两种
 =====================================================
 scrapy 安装
 使用pip安装scrapy不成功,则:（安装whl之前先安装wheel）
