@@ -73,7 +73,7 @@ git log --pretty=oneline
 查看远程仓库, git remote -v(详情)
 添加远程仓库, git remote add [shortname] [url]
 从远程仓库抓取数据到本地git库, git fetch shortname,创建了一个新的分支
-推送数据到远程仓库, git push remote master,只有在所克隆的服务器上有写权限，或者其他人没有提交数据
+推送数据到远程仓库, git push origin master,只有在所克隆的服务器上有写权限，或者其他人没有提交数据
 查看远程仓库的信息, git remote show [remote-name]
 远程仓库的重命名和删除, git remote rename/rm
 
