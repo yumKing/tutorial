@@ -65,6 +65,7 @@ git log,最新的版本再最上面
 git log -p -2,每次提交的内容差异，-2表示最近2次更新
 git log --stat ,增改行统计
 git log --pretty=oneline
+git reflog
 
 撤销操作:
 取消已经暂存的文件,git reset HEAD xxx
@@ -95,13 +96,25 @@ git log --pretty=oneline
 远程分支使用:
 创建并切换分支, git checkout -b  [分支名] [远程名/分支名]
 远程分支合并到本地分支, git merge [远程分支名]
-删除远程分支, git push [远程名] [本地分支]:[远程分支]，其中设置本地分支为空 
+删除远程分支, git push [远程名] [本地分支]:[远程分支]，其中设置本地分支为空
 	即:git push [远程名] :[远程分支]
 
 分支的变基:不要在公共仓库中同时使用合并和变基操作
 git rebase xxx ,将当前分支变基到指定分支xxx的上游去,将当前分支的变化在xxx上重演一遍
 
 git服务器:
+协议: 本地传输，SSH协议，Git协议和Http协议
+SSH协议, 唯一一个同时支持读写操作的网络协议
+	git clone ssh://user@server/project.git
+	缺点:不能通过它对仓库实现匿名访问
+Git协议, 提供匿名访问仓库的功能，并且可以允许推送操作，但是没有授权机制
+
+HTTP协议,  易于架设,HTTP 进行推送操作也是可能的
+
+
+Git工具:
+
+
 =====================================================
 scrapy 安装
 使用pip安装scrapy不成功,则:（安装whl之前先安装wheel）
