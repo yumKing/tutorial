@@ -160,3 +160,16 @@ others:
 2、xpath
 /html/body/div/div[2]/div[1]/div[1]
 body > div > div:nth-child(2) > div.col-md-8 > div:nth-child(1)
+
+3、git clone 报错fatal: error: RPC failed; result=55, HTTP code = 200
+	修改git传送字节限制
+	git config --global http.postBuffer 52428800
+
+4、git clone 报错curl 56 OpenSSL SSL_read:SSL_ERROR_sysCALL
+	第一步使用env命令保证了忽略证书错误是单次行为，不会成为默认的设置
+	1、env命令设置GIT_SSL_NO_VERIFY环境变量为true,并同时调用git clone
+	如:env GIT_SSL_NO_VERIFY=true git clone https://<host_name/git/project.git
+
+	第二次，则把忽略证书错误的设置限定在特定的仓库
+	2、克隆完毕的仓库中将http.sslVerify设置为false
+		git config http.sslVerify "false"
