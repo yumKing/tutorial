@@ -14,6 +14,8 @@ git安装配置:
 git config --global user.name xxx
 git config --global user.email xxx
 
+git config --system --unset credential.helper
+
 文本编辑器配置:(默认不用设置)
 git config --global core.editor emacs
 
@@ -28,6 +30,7 @@ git init , 在需要把制定项目交由git管理使用，项目根目录使用
 git add xxx/all ,将修改的文件或者很多文件添加到缓存区时使用
 git commit ,提交修改到本地git仓库
 git commit -a,暂存加提交，简化操作
+git commit -amend 提交时，将最后一次已提交的记录删除，并生成新的提交版本
 
 git clone [url] [local_prj_name],
 url 协议: git://  http(s)://  user@server://path.git
@@ -69,7 +72,7 @@ git reflog
 
 撤销操作:
 取消已经暂存的文件,git reset HEAD xxx
-git reset --hard origin/master
+git reset --hard origin/master  将远程分支强制覆盖本地分支
 
 远程仓库的使用:
 查看远程仓库, git remote -v(详情)
@@ -93,6 +96,18 @@ git reset --hard origin/master
 合并分支, git merge xxx,在当前分支下,把xxx合并到当前分支
 删除合并过的分支, git branch -d [分支名]
 查看已经合并(未合并)过的分支, git branch --merged(--no-merged)
+
+Git如何在不提交当前分支内容的情况下切换到其它分支进行操作——git stash 隐藏分支
+1、git stash
+2、切换到其他分支执行完后
+3、git stash list 查找所有的隐藏分支
+4、git stash apply [id] ，如stash {0}
+5、删除隐藏分支信息，git stash drop [id]
+
+将一个分支上的部分内容合并到当前分支
+git checkout --patch xxx_brach file
+
+
 
 远程分支使用:
 创建并切换分支, git checkout -b  [分支名] [远程名/分支名]
@@ -176,4 +191,37 @@ body > div > div:nth-child(2) > div.col-md-8 > div:nth-child(1)
 	2、克隆完毕的仓库中将http.sslVerify设置为false
 		git config http.sslVerify "false"
 
-测试测试测试测试测试测试测试测试测试测试
+=================================================================================
+
+scrapy-redis + scrapyd + scrapydWeb 分布式爬虫部署及可视化部署
+
+spring + elastic-job 管理任务定时调度机制
+
+spring + oracle + elasticsearch + quarz  java爬虫定时调度
+
+
+spring 基本层
+common包；
+	Constants：系统常用变量类
+	ItemDic：相关枚举定义
+	SessionThreadLocal：会话线程池local
+
+controller包：spring控制器执行者
+
+dao包：springDAO层
+
+service包：springSERVICE层
+
+model包：spring POJO
+
+handler包：统一异常处理
+
+
+web.xml：先做contextConfiguration --- applicationContext.xml  --- 这里可以定义实体bean(包括包扫描),特性开启（如：注解使能）,自定义配置文件，其他xml文件
+		再做dispatcherServlet  --- application-servlet.xml  --- 这里可以定义实体bean，web相关配置
+自编写的类，可以使用注解形式进行bean实例化，属性依赖注入
+
+@Configuration 和 @Bean一起使用，前者是类注解，表明内部有bean实例的信息；后者为方法注解，表明该注解下的方法可以实例化bean，该bean的类型是方法返回值的类型，名字是方法名
+@Autowired:根据对象类型搜索spring空间中的实体bean并注入到该对象变量中；@Resource:根据对象名字搜索spring空间中的实体bean并注入到该对象变量中
+================================================
+
