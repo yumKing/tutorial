@@ -115,6 +115,8 @@ Git如何在不提交当前分支内容的情况下切换到其它分支进行�
 将一个分支上的部分内容合并到当前分支
 git checkout --patch xxx_brach file
 
+修改每次提交中的信息
+	
 
 
 远程分支使用:
@@ -231,13 +233,197 @@ web.xml：先做contextConfiguration --- applicationContext.xml  --- 这里可�
 
 @Configuration 和 @Bean一起使用，前者是类注解，表明内部有bean实例的信息；后者为方法注解，表明该注解下的方法可以实例化bean，该bean的类型是方法返回值的类型，名字是方法名
 @Autowired:根据对象类型搜索spring空间中的实体bean并注入到该对象变量中；@Resource:根据对象名字搜索spring空间中的实体bean并注入到该对象变量中
+
+自定义注解要想被spring管理使用，只需要对注解处理器进行管理，这样只需要扫描所有注解处理器，然后和需要的注解匹配即可，
+这里可以定义一个注解来标识注解处理器(这个注解需要被spring管理，使用component注解标识即可)，然后在spring上下文中搜索到这个注解下的所有注解处理器
 ================================================
 docker操作：
+
+docker search image 搜索镜像（运行文件）（image: 镜像名称）
+docker pull image (image： 镜像名称)
+docker rmi imageId  (imageId: 镜像的id)
+
+docker ps 查询所有启动的容器
+docker ps  -a  查询所有容器
+docker rm 镜像id    删除容器
+docker start 镜像id   启动容器
+docker stop 镜像id    停止容器
+
+ 启动容器：
+docker run --name master -d  -p 6379:6379 -p 26379:26379  redis
+   docker run 启动容器
+	   --name 容器名称
+	  -d 容器后台启动
+	   -p 主机端口：容器的端口
+	  redis 运行镜像
+
+查看容器运行的局域网ip地址：（阿里云默认第一个启动的容器IP地址：172.17.0.2, 依次为172.17.0.3, ...）
+docker inspect 容器id
+
+
 docker images
 docker ps
 docker container ls 
 docker exec -it [containerid] /bin/bash
 退出docker ctrl + p + q
+================================================
+elasticsearch
+简单搜索：curl -XGET 'localhost:9200/index_name/doc_type/doc_id'  查找某一个文档
+	返回指定属性字段：curl -XGET 'localhost:9200/index_name/doc_type/doc_id?_source=field1,field2'
+	不要元数据：curl -XGET 'localhost:9200/index_name/doc_type/doc_id?_source
+轻量搜索：curl -XGET 'localhost:9200/index_name/doc_type/_search' 索引所有文档
+一般搜索 临时：curl -XGET 'localhost:9200/index_name/doc_type/_search?q=last_name:Smith'
+   查询表达式：curl -XGET 'localhost:9200/index_name/doc_type/_search' -d 
+'
+{
+	"query":{
+		"match":{
+			"last_name":"Smith"
+		}
+	
+	}
+}
+'
+
+复杂搜索：curl -XGET 'localhost:9200/index_name/doc_type/_search' -d 
+'
+{
+	"query":{
+		"bool":{
+			"must:{
+				"match":{
+					"last_name":"Smith"
+				}
+			},
+			"filter":{
+				"range":{
+					"age":{"gt":30}
+				}
+			}
+		}
+	}
+}
+'
+
+全文搜索（相关性）：curl -XGET 'localhost:9200/index_name/doc_type/_search' -d 
+'
+{
+	"query":{
+		"match":{
+			"about":"rock climbing"  # 这里会进行相关性排序，越接近搜索结构，分数越高
+		}
+	}
+}
+'
+
+短语搜索：curl -XGET 'localhost:9200/index_name/doc_type/_search' -d 
+'
+{
+	"query":{
+		"match_phrase":{
+			"about": "rock climbing" # 这里使用了match_phrase属性，来完全匹配短语rock climbing
+		}
+	}
+}
+'
+
+高亮搜索：curl -XGET 'localhost:9200/index_name/doc_type/_search' -d 
+'
+{    #对查询的字段高亮重新列出显示
+	"query":{
+		"match_phrase":{
+			"about":"rock climbing"
+		}
+	},
+	"highlight":{
+		"fields":{
+			"about":{}
+		}
+	}
+}
+'
+
+分析（这里使用聚合aggregations分析）：curl -XGET 'localhost:9200/index_name/doc_type/_search' -d 
+'
+{    # 查询所有名字为Smith的雇员的兴趣爱好排名,并统计各个兴趣爱好的员工的平均年龄
+	"query":{
+		"match":{
+			"last_name":"Smith"
+		}
+	},
+	"aggs":{
+		"all_interests":{
+			"terms":{"field":"interests"}，
+			"aggs":{ # 分级聚合
+				"avg_age":{
+					"avg":{"field":"age"}
+				}
+			}
+		}
+	}
+}
+'
+
+集群内的原理：
+分片是一个功能完整的搜索引擎，它拥有使用一个节点上的所有资源的能力
+主分片：初始化就不能修改，主分片数确定了索引能存储的最大数据量
+副本分片：主分片的备份，随时可以修改，可以提高吞吐量
+
+更新冲突，乐观并发控制：_version元数据控制
+文档是不可变的：他们不能被修改，只能被替换
+_update 更新文档，使用脚本 ctx._source.fields 操作属性
+
+
+多文档返回mget： curl -XGET 'localhost:9200/_mget' -d 
+'
+{
+	"docs": [
+		{
+			"_index":index_name,
+			"_type":doc_type,
+			"_id":"2"
+		},
+		{
+			"_index":index_name,
+			"_type":doc_type,
+			"_id":"3"
+		}
+	]
+}
+'
+curl -XGET 'localhost:9200/index_name/doc_type/_mget' -d 
+'
+{
+	"ids": ["2", "1"]
+}
+'
+
+多文档操作bulk：curl -XPOST 'localhost:9200/_bulk' -d 
+'
+{"delete":{"_index": index_name,"_type":doc_type,"_id":"3"}}
+{"create":{"_index": index_name,"_type":doc_type,"_id":"2"}}
+{"title":"this is test"}
+{"index":{"_index": index_name,"_type":doc_type,"_id":"2"}}
+{"title":"this is test"}
+{"update":{"_index": index_name,"_type":doc_type,"_id":"2", "_retry_on_conflict":3}}
+{"doc":{"title":"this is test"}}
+'
+
+curl -XPOST 'localhost:9200/index_name/doc_type/_bulk' -d 
+'
+{ "index": {}}
+{ "title": "User logged in" }
+{ "index": { "_type": other_doc_type }}
+{ "title": "Overriding the default type" }
+'
+
+
+query 属性：
+bool：must，should，must_not
+term：精确匹配，直接从分词库中查找，不进行分词器分析
+match：分词匹配，查找前先将关键字分词，再去分词库查找
+match_phrase:对关键词分词后，查找包含所有词组的结果
+
 ================================================
 设计模式7个原则：
 1、单一职责原则
@@ -367,3 +553,4 @@ mvc模型：模型、视图、控制器，其中的模型就是观察目标，�
 实现表示层和数据逻辑层的分离，定义了稳定的消息更新传递机制
 观察者模式支持广播通信，观察目标会向所有已注册的观察者对象发送通知，简化了一对多系统设计的难度
 观察者模式满足“开闭原则”的要求，增加新的具体观察者无须修改原有系统代码，在具体观察者与观察目标之间不存在关联关系的情况下，增加新的观察目标也很方便
+
