@@ -2,7 +2,7 @@ git操作：
 1、github上创建一个仓库
 2、git remote add origin 仓库地址
 3、git pull origin master(第一次报错)
-	1、fatal: Couldn't find remote ref master 不用管，继续提交
+"	1、fatal":"Couldn't find remote ref master 不用管，继续提交"
 	2、git remote rm origin
 	   git remote add origin XXXX
 4、git push -u origin master
@@ -33,7 +33,7 @@ git commit -a,暂存加提交，简化操作
 git commit -amend 提交时，将最后一次已提交的记录删除，并生成新的提交版本
 
 git clone [url] [local_prj_name],
-url 协议: git://  http(s)://  user@server://path.git
+"url 协议":"git://  http(s)://  user@server://path.git"
 将远程仓库克隆到本地,可以修改项目名
 git push origin maset ,提交本地修改到远程仓库
 
@@ -46,7 +46,7 @@ git状态:(查看，git status)
 提交到本地:执行了git commit命令后，在暂存区中的文件被提交本地库，并新开了一个历史版本
 
 查看详细修改:
-git diff : 当前工作区和暂存区的文件比较，如果暂存区没有，则和最新版本比较
+"git diff ":"当前工作区和暂存区的文件比较，如果暂存区没有，则和最新版本比较"
 git diff --cached/--staged :暂存区和最新版本的比较
 
 忽略某些文件的提交
@@ -120,6 +120,10 @@ git checkout --patch xxx_brach file
 
 
 远程分支使用:
+用git push --set-upstream origin branch_name来在远程创建一个与本地branch_name同名的分支并跟踪
+如果远程新建了一个分支，本地没有该分支，可以用git checkout --track origin/branch_name
+如果创建了一个远程分支branch_name，而在本地想创建一个和远程分支不同名字的分支，则可以使用git checkout -b new_branch_name origin/branch_name
+
 创建并切换分支, git checkout -b  [分支名] [远程名/分支名]
 远程分支合并到本地分支, git merge [远程分支名]
 删除远程分支, git push [远程名] [本地分支]:[远程分支]，其中设置本地分支为空
@@ -129,7 +133,7 @@ git checkout --patch xxx_brach file
 git rebase xxx ,将当前分支变基到指定分支xxx的上游去,将当前分支的变化在xxx上重演一遍
 
 git服务器:
-协议: 本地传输，SSH协议，Git协议和Http协议
+"协议":"本地传输，SSH协议，Git协议和Http协议"
 SSH协议, 唯一一个同时支持读写操作的网络协议
 	git clone ssh://user@server/project.git
 	git remote add origin git@github.com:Username/Your_Repo_Name.git
@@ -141,7 +145,9 @@ HTTP协议,  易于架设,HTTP 进行推送操作也是可能的
 
 Git工具:
 交互式暂存, git add -i
-
+=====================================================
+linux 外网ip查询
+curl http://members.3322.org/dyndns/getip
 =====================================================
 scrapy 安装
 使用pip安装scrapy不成功,则:（安装whl之前先安装wheel）
@@ -239,14 +245,14 @@ Twisted的Protocols抽象由interfaces模块中的IProtocol定义，一个具体
 
 others:
 1、运行scrapy crawl name 报错
-提示 ImportError: No module named 'win32api'
+"提示 ImportError":"No module named 'win32api'"
 需要安装 pip install pypiwin32
 
 2、xpath
 /html/body/div/div[2]/div[1]/div[1]
 body > div > div:nth-child(2) > div.col-md-8 > div:nth-child(1)
 
-3、git clone 报错fatal: error: RPC failed; result=55, HTTP code = 200
+"3、git clone 报错fatal: error":"RPC failed; result=55, HTTP code = 200"
 	修改git传送字节限制
 	git config --global http.postBuffer 52428800
 
@@ -298,7 +304,7 @@ web.xml：先做contextConfiguration --- applicationContext.xml  --- 这里可�
 db-service ：实现功能接口类，并提供dubbo 提供者服务到dubbo注册中心
 db-api ： api接口 ，使用公共接口实现 --> 从注册中心的对应提供者中去取出提供者接口实现类
 db-getway： 一些枚举和接口类
-db-common : 功能接口类
+"db-common ":"功能接口类"
 =================================================
 redis 哨兵模式搭建
 
@@ -313,13 +319,79 @@ slave-x:
 	port 26380 (指定哨兵监听端口)
     sentinel monitor master_redis 172.17.0.2 6379 1 （监听master_redis,将这个主服务器判断为失效并下线至少需要1个sentinel同意）
     daemonize yes （后台运行）
+================================================
+vim操作
+------------
+命令行模式， 默认模式
+----------------------------
+移动光标：
+---------
+w 		:	移动光标到下一个单词开头
+e		:	移动光标到下一个单词结尾
+b		:	移动光标到上一个单词
+0 或 ^		:	移动光标到本行头
+$		:	移动光标到本行尾
+A		:	移动光标到行尾并处于追加状态，直接编辑
+H		:	移动光标到屏幕首行
+M		:	移动光标到屏幕中间
+L		:	移动光标到屏幕尾行
+gg		：	移动光标到文档首
+G		：	移动光标到文档尾
 
+ctrl + f  向下翻页
+ctrl + b  向上翻页
+ctrl + d  向下翻半页
+ctrl + u  向上翻半页
+ctrl + e  向下翻一行
+ctrl + y  向上翻一行
+[[    转到上一个位于第一列的"{"
+]]    转到下一个位于第一列的"}"
+{     转到上一个空行
+}     撞到下一个空行
+''    2个单引号，移动光标到上一个标记处
+'.    一单一点， 移动光标到上一次修改行
+`.   倒引号，一点， 移动光标到上一次修改点
+
+查找：
+-------
+"/xxx (?xxx) 	":" /表示向下查找， ？表示向下查找；	查询字符串，高亮显示所有位置的该字符串， 按n为下一个高亮位置， 按N为上一个高亮位置"
+"* (#)           ":"查找光标位置上的单词的所有字符串，并高亮"
+"g*(g#)			":" 查找包含光标位置上的单词的所有字符串"
+%				：查找光标所在处相匹配的反括号
+
+visual block模式：在命令行模式ctrl+v进入
+----------------------------
+选择需要编辑的块，然后按大写字母I 键，进入编辑模式，
+修改块的第一行后，按2次ESC即可对块中所有行改动
+
+删除只需要对选中字符 后 按字母j，或者k选中注释符号 
+然后按 d即可，不需要进入编辑模式
+
+
+编辑模式， 按i即可进入
+----------------------------
+
+扩展模式，在命令行模式下输入 :xxx 表示
+----------------------------
+:noh 消除高亮
+:n	 移动到指定行n
+:set ignorecase 忽略大小写
+
+================================================
+python whl 集合
+https://www.lfd.uci.edu/~gohlke/pythonlibs
+
+python pypi镜像
+https://pypi.tuna.tsinghua.edu.cn/simple
+
+json批量生成数据
+http://www.json-generator.com/
 ================================================
 docker操作：
 
-docker search image 搜索镜像（运行文件）（image: 镜像名称）
+"docker search image 搜索镜像（运行文件）（image":"镜像名称）"
 docker pull image (image： 镜像名称)
-docker rmi imageId  (imageId: 镜像的id)
+"docker rmi imageId  (imageId":"镜像的id)"
 
 docker ps 查询所有启动的容器
 docker ps  -a  查询所有容器
@@ -406,7 +478,7 @@ elasticsearch
 {
 	"query":{
 		"match_phrase":{
-			"about": "rock climbing" # 这里使用了match_phrase属性，来完全匹配短语rock climbing
+"			"about"":""rock climbing" # 这里使用了match_phrase属性，来完全匹配短语rock climbing"
 		}
 	}
 }
@@ -462,7 +534,7 @@ _update 更新文档，使用脚本 ctx._source.fields 操作属性
 多文档返回mget： curl -XGET 'localhost:9200/_mget' -d 
 '
 {
-	"docs": [
+"	"docs"":"["
 		{
 			"_index":index_name,
 			"_type":doc_type,
@@ -479,27 +551,27 @@ _update 更新文档，使用脚本 ctx._source.fields 操作属性
 curl -XGET 'localhost:9200/index_name/doc_type/_mget' -d 
 '
 {
-	"ids": ["2", "1"]
+"	"ids"":"["2", "1"]"
 }
 '
 
 多文档操作bulk：curl -XPOST 'localhost:9200/_bulk' -d 
 '
-{"delete":{"_index": index_name,"_type":doc_type,"_id":"3"}}
-{"create":{"_index": index_name,"_type":doc_type,"_id":"2"}}
+"{"delete":{"_index"":"index_name,"_type":doc_type,"_id":"3"}}"
+"{"create":{"_index"":"index_name,"_type":doc_type,"_id":"2"}}"
 {"title":"this is test"}
-{"index":{"_index": index_name,"_type":doc_type,"_id":"2"}}
+"{"index":{"_index"":"index_name,"_type":doc_type,"_id":"2"}}"
 {"title":"this is test"}
-{"update":{"_index": index_name,"_type":doc_type,"_id":"2", "_retry_on_conflict":3}}
+"{"update":{"_index"":"index_name,"_type":doc_type,"_id":"2", "_retry_on_conflict":3}}"
 {"doc":{"title":"this is test"}}
 '
 
 curl -XPOST 'localhost:9200/index_name/doc_type/_bulk' -d 
 '
-{ "index": {}}
-{ "title": "User logged in" }
-{ "index": { "_type": other_doc_type }}
-{ "title": "Overriding the default type" }
+"{ "index"":"{}}"
+"{ "title"":""User logged in" }"
+"{ "index": { "_type"":"other_doc_type }}"
+"{ "title"":""Overriding the default type" }"
 '
 
 
