@@ -32,9 +32,41 @@ git commit ,提交修改到本地git仓库
 git commit -a,暂存加提交，简化操作
 git commit -amend 提交时，将最后一次已提交的记录删除，并生成新的提交版本
 
+git提交模板
+----------
+	<type>(<scope>): <subject>
+	<BLANK LINE>
+	<body>
+	<BLANK LINE>
+	<footer>
+
+	标题行: 必填, 描述主要修改类型和内容
+	主题内容: 描述为什么修改, 做了什么样的修改, 以及开发的思路等等
+	页脚注释: 放 Breaking Changes 或 Closed Issues
+	
+	type: commit 的类型
+		feat: 新特性
+		fix: 修改问题
+		refactor: 代码重构
+		docs: 文档修改
+		style: 代码格式修改, 注意不是 css 修改
+		test: 测试用例修改
+		chore: 其他修改, 比如构建流程, 依赖管理.
+		scope: commit 影响的范围, 比如: route, component, utils, build...
+		subject: commit 的概述
+	body: commit 具体修改内容, 可以分为多行.
+	footer: 一些备注, 通常是 BREAKING CHANGE 或修复的 bug 的链接.
+
+
 git clone [url] [local_prj_name],
 "url 协议":"git://  http(s)://  user@server://path.git"
 将远程仓库克隆到本地,可以修改项目名
+
+git clone -b branch --single-branch url  只拉取单个分支，但是后面会拉取不到其他分支了，解决办法：
+	git config --get-all remote.origin.fetch , 发现锁定了
+	git remote set-branches origin --add [要拉取的分支]
+	
+	
 git push origin master ,提交本地修改到远程仓库
 
 git状态:(查看，git status)
@@ -48,6 +80,32 @@ git状态:(查看，git status)
 查看详细修改:
 "git diff ":"当前工作区和暂存区的文件比较，如果暂存区没有，则和最新版本比较"
 git diff --cached/--staged :暂存区和最新版本的比较
+
+分支比较
+---------
+	1. 显示出branch1和branch2中差异的部分
+	git diff branch1 branch2 --stat
+
+	2. 显示指定文件的详细差异
+	git diff branch1 branch2 具体文件路径
+
+	3. 显示出所有有差异的文件的详细差异
+	git diff branch1 branch2
+
+	4. 查看branch1分支有，而branch2中没有的log
+	git log branch1 ^branch2
+
+	5. 查看branch2中比branch1中多提交了哪些内容
+	git log branch1..branch2
+	注意，列出来的是两个点后边（此处即dev）多提交的内容。
+
+	6. 不知道谁提交的多谁提交的少，单纯想知道有是吗不一样
+	git log branch1...branch2
+
+	7. 在上述情况下，在显示出没个提交是在哪个分支上
+	git log --lefg-right branch1...branch2
+	注意 commit 后面的箭头，根据我们在 –left-right branch1…branch2 的顺序，左箭头 < 表示是 branch1 的，右箭头 > 表示是branch2的。
+
 
 忽略某些文件的提交
 文件 .gitignore 的格式规范如下：
@@ -70,9 +128,22 @@ git log --stat ,增改行统计
 git log --pretty=oneline
 git reflog
 git log --graph --pretty=oneline --abbrev-commit
+git log --graph --oneline --all
 
 撤销操作:
-取消已经暂存的文件,git reset HEAD xxx
+取消已经暂存的文件,git reset [option] HEAD~[1,2,3...]
+	--mixed
+		意思是：不删除工作空间改动代码，撤销commit，并且撤销git add . 操作
+		这个为默认参数,git reset --mixed HEAD^ 和 git reset HEAD^ 效果是一样的。
+	--soft
+		不删除工作空间改动代码，撤销commit，不撤销git add .
+	--hard
+		删除工作空间改动代码，撤销commit，撤销git add .
+
+作者：a海豚有海
+链接：https://www.jianshu.com/p/491a14d414f6
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 git reset --hard origin/master  将远程分支强制覆盖本地分支
 回滚操作：git reset --hard [log_id]
 
@@ -115,6 +186,7 @@ git merge -Xignore-space-change  忽略空白改变
 
 删除合并过的分支, git branch -d [分支名]
 查看已经合并(未合并)过的分支, git branch --merged(--no-merged)
+删除本地中的远程跟踪分支，不会删除远程仓库中的分支： git branch -r -d 远程分支名
 
 分支冲突
 git ls-files -u 可以查看共同的祖先版本(1) ，当前分支版本(2)，要合并分支版本(3)
@@ -256,6 +328,12 @@ vue项目部署
 	1、npm run build，生成dist目录及文件，这个目录就是部署文件
 	2、nginx 配置文件， 主要配置客户访问地址，及访问后端api地址
 	3、gunicorn配置, 后端服务启动配置
+
+vue-cli3.x
+-----------
+	创建项目 vue create -r http://registry.npm.taobao.org app-name
+	问题：
+	1、引入mint-ui组件报错，在shims-vue.d.ts中添加(declare module "mint-ui";)括号内的内容即可
 
 =====================================================
 google play store应用下载
@@ -491,6 +569,78 @@ debian linux 系统库查找方式
 4、apt-get install so文件对应的包
 -----------------
 	
+linux信息
+cat /etc/redhat-release
+	
+================================================
+consul启动：
+	./consul agent -dev -ui -client 0.0.0.0
+	删除无效服务：
+	PUT http://172.16.22.74:8500/v1/agent/service/deregister/mars-10-15-80-245-6800
+maven启动：
+	mvn clean package deploy -Dmaven.test.skip=true --global-settings D:/myprogram/apache-maven-3.6.0/conf/settings-colourful.xml --settings D:/myprogram/apache-maven-3.6.0/conf/settings-colourful.xml -f pom.xml
+	mvn clean package -Dmaven.test.skip=true --global-settings D:/myprogram/apache-maven-3.6.0/conf/settings-colourful.xml --settings D:/myprogram/apache-maven-3.6.0/conf/settings-colourful.xml -f pom.xml
+
+idea 远程调试：
+	1、-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005
+	2、idea项目启动
+
+nginx ssl证书生成
+-------------
+	1、生成key，必须输入密码： openssl genrsa -des3 -out ssl.key 1024
+	2、去掉密码： mv ssl.key ssl_origin.key  openssl rsa -in ssl_origin.key -out ssl.key
+	3、生成证书请求文件：openssl req -new -key ssl.key -out ssl.csr
+	4、生成crt/pem证书文件： openssl x509 -req -days 365 -in ssl.csr -signkey ssl.key -out ssl.[crt/pem]
+	[5]、pfx文件： openssl pkcs12 -export -inkey ssl.key -in ssl.crt -out ssl.pfx
+================================================
+对连接的IP按连接数量进行排序  
+netstat -ntu | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n  
+
+查看TCP连接状态  
+  
+netstat -nat |awk '{print $6}'|sort|uniq -c|sort -rn  
+netstat -n | awk '/^tcp/ {++S[$NF]};END {for(a in S) print a, S[a]}'  
+netstat -n | awk '/^tcp/ {++state[$NF]}; END {for(key in state) print key,"\t",state[key]}'  
+netstat -n | awk '/^tcp/ {++arr[$NF]};END {for(k in arr) print k,"\t",arr[k]}'  
+netstat -n |awk '/^tcp/ {print $NF}'|sort|uniq -c|sort -rn  
+netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c  
+
+查看80端口连接数最多的20个IP    
+netstat -anlp|grep 80|grep tcp|awk '{print $5}'|awk -F: '{print $1}'|sort|uniq -c|sort -nr|head -n20  
+
+查找较多time_wait连接  
+netstat -n|grep TIME_WAIT|awk '{print $5}'|sort|uniq -c|sort -rn|head -n20  
+
+查找较多的SYN连接  
+netstat -an | grep SYN | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq -c | sort -nr | more 
+
+查看当前并发访问数：
+netstat -an | grep ESTABLISHED | wc -l
+
+查看所有连接请求
+netstat -tn 2>/dev/null 
+但是只要established的，则grep  "ESTABLISHED" 
+netstat -tn | grep ESTABLISHED 2>/dev/null
+
+查看访问某一ip的所有外部连接IP(数量从多到少)
+netstat -nt | grep 121.41.30.149:80 | awk '{print $5}' | awk -F: '{print ($1>$4?$1:$4)}' | sort | uniq -c | sort -nr | head
+
+查看端口是否可访问：telnet ip 端口号
+开放的端口位于/etc/sysconfig/iptables中
+查看时通过 cat /etc/sysconfig/iptables 命令查看
+
+如果想开放端口（如：tcp 2222）
+（1）通过vim /etc/sysconfig/iptables 进入编辑增添一条：
+-A INPUT -p tcp -m tcp --dport 8889 -j ACCEPT
+（2）执行 /etc/init.d/iptables restart 命令将iptables服务重启
+（3）保存 /etc/rc.d/init.d/iptables save
+
+若/etc/sysconfig/iptables不存在；
+原因：在新安装的linux系统中，防火墙默认是被禁掉的，一般也没有配置过任何防火墙的策略，所有不存在/etc/sysconfig/iptables文件。
+解决： 在控制台使用iptables命令随便写一条防火墙规则，如：iptables -P OUTPUT ACCEPT
+使用service iptables save进行保存，默认就保存到了/etc/sysconfig目录下的iptables文件中
+—
+
 ================================================
 go学习：goproxy
 https://mirrors.aliyun.com/goproxy/
